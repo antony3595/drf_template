@@ -3,7 +3,8 @@ from django.utils.translation import gettext_lazy as _
 
 
 class AppUser(AbstractUser):
-    pass
+    class Meta:
+        ordering = ["id"]
 
 
 class AppGroup(Group):
