@@ -145,6 +145,45 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 16
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'info.log'),
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 10,  # 10MB
+            'backupCount': 10,
+        },
+        'error_file': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'error.log'),
+            'formatter': 'verbose',
+            'maxBytes': 1024 * 1024 * 10,  # 10MB
+            'backupCount': 10,
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file', 'error_file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+
+    },
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
