@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+  postgres:
+    restart: always
+    image: postgres:9.6
+    container_name: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - TZ=Asia/Bishkek
+      - PGTZ=Asia/Bishkek
+      - POSTGRES_DB=template_db
+      - POSTGRES_USER=someuser
+      - POSTGRES_PASSWORD=somepass
+    volumes:
+      - ~/docker_volumes/django_template:/var/lib/postgresql/data
+    networks:
+      - backend
+
+volumes:
+  redis_data:
+
+networks:
+  backend:

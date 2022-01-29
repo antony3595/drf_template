@@ -1,0 +1,23 @@
+version: '3.3'
+
+services:
+  drf_template:
+    image: drf_template:1
+    container_name: drf_template
+    environment:
+      - DB_NAME=template_db
+      - DB_USER=someuser
+      - DB_PASS=somepass
+      - DB_HOST=postgres
+      - DB_PORT=5432
+    restart: always
+    volumes:
+      - ~/docker_volumes/drf_template/media:/code/media
+      - ~/docker_volumes/drf_template/logs:/code/logs
+    ports:
+      - 9000:8000
+    networks:
+      backend:
+
+networks:
+  backend:
