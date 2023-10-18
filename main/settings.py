@@ -10,7 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
+from datetime import timedelta
 from pathlib import Path
+
+from .constants import DATETIME_FORMAT, DATE_FORMAT
 
 SITE_NAME = "DRF API template"
 
@@ -38,8 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # libs
     'rest_framework',
     'drf_yasg',
+    'knox',
+    # project modules
     'users',
 ]
 
@@ -78,12 +84,9 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME', 'template_db'),
-        'USER': os.environ.get('DB_USER', 'someuser'),
-        'PASSWORD': os.environ.get('DB_PASS', 'somepass'),
-        'HOST': os.environ.get('DB_HOST', '127.0.0.1'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'local_db.sqlite3',  # This is where you put the name of the db file.
+        # If one doesn't exist, it will be created at migration time.
     }
 }
 
@@ -131,18 +134,34 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
-    ),
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',),
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
+        'main.response.auth.CustomKnoxTokenAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
-        'django_filters.rest_framework.DjangoFilterBackend',
-    ),
+        'django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.SearchFilter',
+        'rest_framework.filters.OrderingFilter'),
     'DEFAULT_PAGINATION_CLASS': 'main.pagination.AppPagination',
-    'PAGE_SIZE': 16
+    'DEFAULT_RENDERER_CLASSES': (
+        'main.response.renderer.CustomJSONResponseRenderer',
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.TemplateHTMLRenderer',
+    ),
+    'PAGE_SIZE': 16,
+    'DATETIME_FORMAT': DATETIME_FORMAT,
+    'DATETIME_INPUT_FORMATS': ("%d.%m.%Y %H:%M:%S",),
+    'DATE_FORMAT': DATE_FORMAT,
+    "DATE_INPUT_FORMATS": ("%d.%m.%Y",),
+    'TIME_FORMAT': "%H:%M:%S",
+    "EXCEPTION_HANDLER": "main.response.exception_handler.custom_exception_handler"
+}
+
+REST_KNOX = {
+    'SECURE_HASH_ALGORITHM': 'cryptography.hazmat.primitives.hashes.SHA512',
+    'AUTH_TOKEN_CHARACTER_LENGTH': 64,
+    'TOKEN_TTL': timedelta(hours=10),
+    'TOKEN_LIMIT_PER_USER': None,
+    'AUTO_REFRESH': True,
 }
 
 LOGGING = {
