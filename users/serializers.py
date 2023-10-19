@@ -82,6 +82,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class CurrentUserSerializer(UserSerializer):
     groups = BaseGroupSerializer(many=True)
+    permissions = serializers.SerializerMethodField(read_only=True)
+
+    def get_permissions(self, user):
+        return user.get_all_permissions()
 
     class Meta(KnoxUserSerializer.Meta):
         model = AppUser
@@ -97,6 +101,7 @@ class CurrentUserSerializer(UserSerializer):
             "is_staff",
             "is_superuser",
             "groups",
+            "permissions",
         )
 
 
