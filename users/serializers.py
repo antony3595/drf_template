@@ -100,22 +100,6 @@ class CurrentUserSerializer(UserSerializer):
         )
 
 
-class TokenUserSerializer(UserSerializer):
-    class Meta(KnoxUserSerializer.Meta):
-        model = AppUser
-        fields = (
-            "id",
-            "username",
-            "first_name",
-            "last_name",
-            "middle_name",
-            "email",
-            "is_staff",
-            "is_superuser",
-            "type",
-        )
-
-
 class CreateUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
     password2 = serializers.CharField(write_only=True, required=True)
