@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     # libs
     'corsheaders',
     'rest_framework',
+    'ckeditor',
+    'ckeditor_uploader',
     'drf_yasg',
     'knox',
     # project modules
@@ -202,6 +204,35 @@ LOGGING = {
             'propagate': True,
         },
 
+    },
+}
+
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': [
+            ['Undo', 'Redo',  # отменить повторить шаг
+             '-', 'Bold', 'Italic', 'Underline',  # сделать текст жирным, курсивным, подчёркнутым
+             '-', 'Link', 'Unlink', 'Anchor',  # добавить, убрать ссылку; добавить якорь
+             '-', 'Format',  # выбор формата (h1, h2 и т.д.)
+             '-', 'Maximize',  # развернуть во весь экран (очень удобно:) )
+             '-', 'Table',  # вставить таблицу
+             '-', 'Image',  # вставить картинку
+             '-', 'Source',  # вставить ссылку
+             '-', 'NumberedList', 'BulletedList'  # использовать нумерованный и маркерованный список
+             ],
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock',  # выравнивание
+             '-', 'Font', 'FontSize', 'TextColor',  # изменить шрифт, его размер, и цвет текста
+             '-', 'Outdent', 'Indent',  # отступы влево вправо
+             '-', 'HorizontalRule',  # горизонтальная линия
+             '-', 'Blockquote'  # поместить блок как цитату
+             ]
+        ],
+        'height': 700,  # высота
+        'width': '100%',  # ширина
+        'toolbarCanCollapse': False,
+        'forcePasteAsPlainText': True  # вставлять текст из других источников как простой текст
     },
 }
 

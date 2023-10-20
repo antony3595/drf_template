@@ -1,9 +1,11 @@
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
 from main import settings
+from main.ckeditor_views.views import CustomCKEditorAPIView
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -29,3 +31,14 @@ urlpatterns = [
     path('admin-api/', include('users.urls')),
     path('api-auth/', include('rest_framework.urls')),
 ]
+
+# CKEditor
+urlpatterns += [
+    path('admin-api/ckeditor/upload', CustomCKEditorAPIView.as_view()),
+]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)
